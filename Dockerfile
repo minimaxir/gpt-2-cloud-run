@@ -8,9 +8,14 @@ RUN apt-get -y update && \
     locale-gen en_US.UTF-8
 
 RUN pip3 install --upgrade pip
-RUN pip3 --no-cache-dir install tensorflow gpt-2-simple starlette uvicorn ujson
 
-COPY checkpoint /
+WORKDIR /
+COPY checkpoint /checkpoint
+
+# Make changes to the requirements/app here.
+# This Dockerfile order allows Docker to cache the checkpoint layer
+# and improve build times if making changes.
+RUN pip3 --no-cache-dir install tensorflow gpt-2-simple starlette uvicorn ujson
 COPY app.py /
 
 # Support UTF-8 input
