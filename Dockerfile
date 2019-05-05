@@ -1,6 +1,6 @@
 FROM python:3.7.3-slim-stretch
 
-RUN apt-get -y update && apt-get -y install gcc locales && locale-gen en_US.UTF-8
+RUN apt-get -y update && apt-get -y install gcc
 
 WORKDIR /
 COPY checkpoint /checkpoint
@@ -11,10 +11,7 @@ COPY checkpoint /checkpoint
 RUN pip3 --no-cache-dir install tensorflow gpt-2-simple starlette uvicorn ujson
 COPY app.py /
 
-# Support UTF-8 input
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
-
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENTRYPOINT ["python3", "app.py"]
+ENTRYPOINT ["python3", "-X", "utf8", "app.py"]
