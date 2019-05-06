@@ -10,9 +10,12 @@ sess = gpt2.start_tf_sess(threads=1)
 gpt2.load_gpt2(sess)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 async def homepage(request):
-    params = request.query_params
+    if request.method == 'GET':
+        params = request.query_params
+    elif request.method == 'POST':
+        params = await request.json()
 
     text = gpt2.generate(sess,
                          length=int(params.get('length', 1023)),
