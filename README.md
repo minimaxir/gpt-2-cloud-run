@@ -1,6 +1,6 @@
 # gpt-2-cloud-run
 
-App for building a text-generation API for generating text from [OpenAI](https://openai.com)'s [GPT-2](https://openai.com/blog/better-language-models/) via gpt-2-simple, and running it in a scalable manner *and virtually free* via Google's [Cloud Run](https://cloud.google.com/run/). This app is intended to be used to easily and cost-effectively allow others to play with a finetuned GPT-2 on another dataset, and allow programmatic access to the generated text.
+App for building a text-generation API for generating text from [OpenAI](https://openai.com)'s [GPT-2](https://openai.com/blog/better-language-models/) via [gpt-2-simple](https://github.com/minimaxir/gpt-2-simple), and running it in a scalable manner *and effectively free* via Google's [Cloud Run](https://cloud.google.com/run/). This app is intended to be used to easily and cost-effectively allow others to play with a finetuned GPT-2 model on another dataset, and allow programmatic access to the generated text.
 
 The base `app.py` runs [starlette](https://www.starlette.io) for async/futureproofness, and is easily hackable if you want to modify GPT-2's input/output, force certain generation parameters, or want to add additional features/endpoints such as tweeting the generated result.
 
@@ -54,7 +54,7 @@ print(text)
 
 ## Demo
 
-Here is a public Cloud Run endpoint which contains the model used to create Hacker News titles: `https://hacker-news-dstdu4u23a-uc.a.run.app`
+Here is a public Cloud Run endpoint which contains the model used to create [Hacker News titles](https://github.com/minimaxir/hacker-news-gpt-2): `https://hacker-news-dstdu4u23a-uc.a.run.app`
 
 You can interact with that URL with the methods mentioned above. (it uses the `hacker_news_app.py` from the `examples` folder, which modifies the existing `app.py` by fixing the `length` at 100 and altering the output. You can still provide a `prefix` and `temperature` as parameters however)
 
@@ -64,7 +64,7 @@ I am seeking contributors to [help build a webpage front-end client](https://git
 
 * Due to Cloud Run's current 2 GB memory maximum, this app will only work with the 117M "small" GPT-2 model, and not the 345M "medium" model (even if Cloud Run offers a 4 GB option in the future, it would not be enough to support the 345M model).
 * Each prediction, at the default 1023 token `length`, will take about 2 minutes to generate. You may want to consider reducing the `length` of the generated text if speed is a concern and/or hardcapping the `length` at the app-level.
-* If your API on Cloud Run is actively processing a question less than 1/8th of the time (at the 100 millisecond level) in a given month, you'll stay [within the free tier](https://cloud.google.com/run/pricing) of Cloud Run.
+* If your API on Cloud Run is actively processing a request less than 1/8th of the time (at the 100 millisecond level) in a given month, you'll stay [within the free tier](https://cloud.google.com/run/pricing) of Cloud Run.
 * The concurrency is set to `2` such that if there is only one user of the API (e.g. a cron that pings the API or a random internet user stumbling accross the API), it will not spawn more instances which would increase cost unnecessarily.
 
 ## If You Want More Power
@@ -83,6 +83,8 @@ I am seeking contributors to [help build a webpage front-end client](https://git
 ## Maintainer/Creator
 
 Max Woolf ([@minimaxir](https://minimaxir.com))
+
+*Max's open-source projects are supported by his [Patreon](https://www.patreon.com/minimaxir). If you found this project helpful, any monetary contributions to the Patreon are appreciated and will be put to good creative use.*
 
 ## License
 
