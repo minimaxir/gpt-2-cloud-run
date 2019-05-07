@@ -29,7 +29,7 @@ Upload your `app.py` and `Dockerfile` to the same GCS bucket.
 The `cloudbuild.yaml` file will use Google Cloud Builder to build the container by copying the files from the GCS bucket, building them, then pushing to the Container Registry. On your local computer, replace the `_BUCKET` with your GCS bucket and `_IMAGE` with the destination name, then run:
 
 ```shell
-gcloud builds submit --config=cloudbuild.yaml
+gcloud builds submit --no-source --config=cloudbuild.yaml
 ```
 
 The container should then appear in the Container Registry under the `_IMAGE` name!

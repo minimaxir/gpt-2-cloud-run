@@ -71,6 +71,8 @@ I am seeking contributors to [help build a webpage front-end client](https://git
 
  If you expect the API to be actively engaged 24/7, need faster response times, and/or want to use the 345M GPT-2 model, you may want to use [Cloud Run on GKE](https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy-gke) instead (and attach a GPU to the nodes + use a `tensorflow-gpu` base for the Dockerfile) and increase concurrency to maximize cost efficiency.
 
+ Additionally, if you plan on making a lot of GPT-2 APIs, you may want to use [Cloud Build](https://cloud.google.com/cloud-build/) to avoid the overhead of downloading/building/reuploading a model. [I have written a short tutorial](/cloud_build.md) on how to get a model trained with Compute Engine built using Cloud Build using the included `cloudbuild.yaml` spec.
+
 ## Future Improvements
 
 * Add/test a GPU image
