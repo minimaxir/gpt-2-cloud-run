@@ -4,7 +4,7 @@ App for building a text-generation API for generating text from [OpenAI](https:/
 
 The base `app.py` runs [starlette](https://www.starlette.io) for async/futureproofness, and is easily hackable if you want to modify GPT-2's input/output, force certain generation parameters, or want to add additional features/endpoints such as tweeting the generated result.
 
-## How to Build the Container
+## How to Build the Container And Start Cloud Run
 
 Since Cloud Run is stateless without access to local storage, you must bundle the model within the container. First, download/clone this repo and copy the model into the folder (the model should be in the form of the folder hierarchy `/checkpoint/run1`, which is the case by default for most finetuning scripts)
 
@@ -52,6 +52,14 @@ text = req.json()['text']
 print(text)
 ```
 
+## Demo
+
+Here is a public Cloud Run endpoint which contains the model used to create Hacker News titles: `https://hacker-news-dstdu4u23a-uc.a.run.app`
+
+You can interact with that URL with the methods mentioned above. (it uses the `hacker_news_app.py` from the `examples` folder, which modifies the existing `app.py` by fixing the `length` at 100 and altering the output. You can still provide a `prefix` and `temperature` as parameters however)
+
+I am seeking contributors to [help build a webpage front-end client](https://github.com/minimaxir/gpt-2-cloud-run/issues/2) for gpt-2-cloud-run endpoints.
+
 ## Helpful Notes
 
 * Due to Cloud Run's current 2 GB memory maximum, this app will only work with the 117M "small" GPT-2 model, and not the 345M "medium" model (even if Cloud Run offers a 4 GB option in the future, it would not be enough to support the 345M model).
@@ -66,7 +74,6 @@ print(text)
 ## Future Improvements
 
 * Add/test a GPU image
-* Add instructions on how to use Cloud Build to avoid the long upload time.
 * Add logging to the app to take advantage of Cloud Run's logging capabilities.
 
 ## See Also

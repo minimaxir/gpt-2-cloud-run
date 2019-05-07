@@ -1,0 +1,10 @@
+substitutions:
+  _BUCKET: <GCS_BUCKET>
+  _IMAGE: gpt2-api
+steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['-m', 'cp', '-r', 'gs://$_BUCKET', '/workspace']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_IMAGE', '/workspace/$_BUCKET' ]
+images:
+- gcr.io/$PROJECT_ID/$_IMAGE
