@@ -37,18 +37,18 @@ footer {
 
 
             <div class="navbar-item">
-                Generate custom text from an AI using GPT-2.
+                Generate custom text from an AI using GPT-2 (using the 117M default model)
             </div>
 
         </div>
 
         <div class="navbar-end">
-            <div class="navbar-item">
+            <div class="navbar-item is-hidden-touch">
                 <div class="buttons">
                     <a class="button is-light">
                             <span class="icon">
                                     <i class="fab fa-lg fa-github"></i>
-                                  </span>
+                                  </span><span>GitHub</span>
                     </a>
                 </div>
             </div>
@@ -60,11 +60,11 @@ footer {
     <section class="section">
         <div class="container">
             <div class="columns is-variable is-8">
-                <div class="column is-narrow" style="width: 300px;">
+                <div class="column is-narrow" style="width: 250px;">
                         <div class="field">
                                 <label class="label">Text Prompt</label>
                                 <div class="control">
-                                  <input id="prefix" class="input" type="text" placeholder="ROMEO:">
+                                  <textarea id="prefix" class="textarea" type="text" placeholder="ROMEO:" rows="2"></textarea>
                                 </div>
                                 <p class="help">Starts the generated text with the specified text. <em>(if empty, will use a random starting text)</em></p>
                               </div>
@@ -83,11 +83,16 @@ footer {
                                     </div>
                                     <p class="help">Controls the generated text "creativity." <em>(the higher the temperature, the more creative)</em></p>
                                   </div>
-
-                              <div class="control">
+                                  <div class="buttons">
+                              <span class="control">
                                     <button class="button is-link">
                                             Generate Text!</button>
-                                  </div>
+                                    </span>
+                                  <span class="control">
+                                        <button class="button is-danger">
+                                                Clear Text</button>
+                                        </span>
+                                      </div>
                 </div>
                 <div id="model-output" class="column">
                     <p class="title is-5">Flexible column</p>
