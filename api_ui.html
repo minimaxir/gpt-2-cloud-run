@@ -6,13 +6,20 @@ html, body {
             margin: 0 !important;
         }
 
-section {
-    min-height: 100% !important
-}
-
 footer {
     /*max-height: 5% !important;*/
     padding: 1em !important
+}
+
+.gen-box {
+    background-color: #fff;
+    display: block;
+    padding: 1.25rem;
+    color: #4a4a4a;
+    border-bottom: 0.5px solid #d5d5d5;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.25;
 }
 </style>
 
@@ -57,10 +64,10 @@ footer {
 </nav>
 
 <body>
-    <section class="section">
+    <section id="main" class="section">
         <div class="container">
             <div class="columns is-variable is-8">
-                <div class="column is-narrow" style="width: 250px;">
+                <div id="generation-form" class="column is-narrow" style="width: 250px;">
                         <div class="field">
                                 <label class="label">Text Prompt</label>
                                 <div class="control">
@@ -71,7 +78,7 @@ footer {
                         <div class="field">
                                 <label class="label">Generated Text Length</label>
                                 <div class="control">
-                                  <input if="length" class="input" type="text" placeholder="Text input" value="100">
+                                  <input id="length" class="input" type="text" placeholder="Text input" value="100">
                                 </div>
                                 <p class="help">Length of the text in tokens to generate. <em>(max: 1024)</em></p>
                               </div>
@@ -85,12 +92,14 @@ footer {
                                   </div>
                                   <div class="buttons">
                               <span class="control">
-                                    <button class="button is-link">
-                                            Generate Text!</button>
+                                    <button id="generate-text" class="button is-link" type="submit" >
+                                            <span class="icon">
+                                                    <i class="fas fa-md fa-robot"></i>
+                                                  </span><span>Generate Text!</span></button>
                                     </span>
                                   <span class="control">
                                         <button class="button is-danger">
-                                                Clear Text</button>
+                                                Clear Texts</button>
                                         </span>
                                       </div>
                 </div>
@@ -113,8 +122,47 @@ footer {
               </p>
             </div>
           </footer>
+
+
 </body>
 
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous">
+</script>
 
+<script type="text/javascript">
+$(function(){
+    $('#generate-text').submit(function(e){
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "https://hacker-news-dstdu4u23a-uc.a.run.app",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify( {
+            "prefix": $('#prefix').val(),
+            "length": $('#length').val(),
+            "temperature": $('#temperature').val(),
+            } ),
+        beforeSend: function(data) {
+          $('#generate-text').addClass("is-loading");
+          $('#generate-text').prop("disabled", true);
+        },
+        success: function(data) {
+            $('#generate-text').removeClass("is-loading");
+            $('#generate-text').prop("disabled", false);
+            $('#model-output').append('<div class="gen-box">' + data['text'] + '</div>');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            $('#generate-text').removeClass("is-loading");
+            $('#generate-text').prop("disabled", false);
+            $('#model-output').append('<div class="gen-box">Error!</div>');
+        }
+      });
+    }); 
+  });
+</script>
 
 </html>
