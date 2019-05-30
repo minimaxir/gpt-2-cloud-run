@@ -166,13 +166,15 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            $('#model-output').append('<div class="gen-box">' + data['text'] + '</div>');
+            var html = '<div class=\"gen-box\">' + data['text'] + '</div>'
+            $(html).appendTo('#model-output').hide().fadeIn("slow");
         },
         error: function(jqXHR, textStatus, errorThrown) {
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            $('#model-output').append('<div class="gen-box warning">Error! The generated text did not return successfully!</div>');
+            var html = '<div class="gen-box warning">Error! The generated text did not return successfully!</div>';
+            $(html).appendTo('#model-output').hide().fadeIn("slow");
         }
       });
     }); 
