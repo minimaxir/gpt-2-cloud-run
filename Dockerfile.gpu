@@ -8,8 +8,8 @@ COPY checkpoint /checkpoint
 # Make changes to the requirements/app here.
 # This Dockerfile order allows Docker to cache the checkpoint layer
 # and improve build times if making changes.
-RUN pip3 --no-cache-dir install gpt-2-simple starlette uvicorn ujson
-COPY app.py /
+RUN pip3 --no-cache-dir install gpt-2-simple starlette uvicorn ujson setproctitle psutil ray
+COPY app_gpu.py /
 
 # Support UTF-8 input
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
@@ -17,4 +17,4 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENTRYPOINT ["python3", "app.py"]
+ENTRYPOINT ["python3", "app_gpu.py"]
