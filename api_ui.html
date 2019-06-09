@@ -32,6 +32,12 @@ section {
 
 }
 
+.brand-text {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em
+}
+
 #extra-buttons {
   padding-top: 1em;
   margin-top: 1em;
@@ -44,15 +50,24 @@ section {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>AI-Generated Text with GPT-2 using Google Cloud Run</title>
+    <meta name="title" content="AI-Generated Text with GPT-2 using Google Cloud Run" />
+    <meta name="description" content="Generate text from OpenAI's GPT-2 model!" />
+
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-        </a>
+      <span class="icon is-large">
+        <span class="fa-stack">
+          <i class="fas fa-circle fa-stack-2x"></i>
+          <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
+        </span>
+      </span>
+      <div class="brand-text is-family-code is-uppercase has-text-weight-bold">GPT-2</div>
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu is-active">
@@ -111,7 +126,7 @@ section {
                               <span class="control">
                                     <button type="submit" name="submit" id="generate-text" class="button is-link" >
                                             <span class="icon">
-                                                    <i class="fas fa-md fa-robot"></i>
+                                                    <i class="fas fa-md fa-pen"></i>
                                                   </span><span>Generate Text!</span></button>
                                     </span>
 
@@ -147,9 +162,8 @@ section {
     <footer class="footer">
             <div class="content has-text-centered">
               <p>
-                <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
-                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-                is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+                Made using <a href="https://github.com/minimaxir/gpt-2-simple" target="_blank"><strong>gpt-2-simple</strong></a> and <a href="https://github.com/minimaxir/gpt-2-cloud-run" target="_blank"><strong>gpt-2-cloud-run</strong></a> by <a href="https://minimaxir.com" target="_blank">Max Woolf</a>. Original GPT-2 model provided by <a href="https://openai.com" target="_blank">OpenAI</a>. This website content
+                is licensed <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT</a>.
               </p>
             </div>
           </footer>
