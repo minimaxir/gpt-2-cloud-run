@@ -95,7 +95,7 @@ section {
                         <div class="field">
                                 <label class="label">Generated Text Length</label>
                                 <div class="control">
-                                  <input id="gen-length" class="input" type="text" placeholder="Text input" value="100">
+                                  <input id="length" class="input" type="text" placeholder="Text input" value="100">
                                 </div>
                                 <p class="help">Length of the text in tokens to generate. <em>(max: 1024)</em></p>
                               </div>
@@ -163,11 +163,7 @@ $(function(){
         type: "POST",
         url: "https://gpt2-hackernews-dstdu4u23a-uc.a.run.app",
         dataType: "json",
-        data: JSON.stringify( {
-            "prefix": $('#prefix').val(),
-            "length": $('#gen-length').val(),
-            "temperature": $('#temperature').val(),
-            } ),
+        data: JSON.stringify( getInputValues() ),
         beforeSend: function(data) {
           $('#generate-text').addClass("is-loading");
           $('#generate-text').prop("disabled", true);
@@ -192,6 +188,14 @@ $(function(){
       $('#model-output').text('')
     });
   });
+
+function getInputValues() {
+  var inputs = {};
+  $("textarea, input").each(function(){
+    inputs[$(this).attr('id')] = $(this).val();
+  });
+  return inputs;
+}
 </script>
 
 </html>
