@@ -31,6 +31,12 @@ section {
     font-weight: 700;
 
 }
+
+#extra-buttons {
+  padding-top: 1em;
+  margin-top: 1em;
+  border-top: 0.5px solid #d5d5d5;
+}
 </style>
 
 <html>
@@ -108,12 +114,15 @@ section {
                                                     <i class="fas fa-md fa-robot"></i>
                                                   </span><span>Generate Text!</span></button>
                                     </span>
-                                  <span class="control">
-                                        <button class="button is-danger">
+
+                                      </div>
+                                      </form>
+                                      <div id="extra-buttons" class="buttons">
+                                      <span class="control">
+                                        <button id="clear-text" class="button is-danger">
                                                 Clear Texts</button>
                                         </span>
                                       </div>
-                                      </form>
                 </div>
                 <div id="model-output" class="column">
                     <p id="tutorial" class="subtitle"><em>Generated text will appear here!
@@ -178,7 +187,10 @@ $(function(){
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         }
       });
-    }); 
+    });
+    $('#clear-text').click(function(e){ 
+      $('#model-output').text('')
+    });
   });
 </script>
 
