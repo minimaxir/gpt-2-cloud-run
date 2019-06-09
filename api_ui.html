@@ -118,9 +118,17 @@ section {
                                       </div>
                                       </form>
                                       <div id="extra-buttons" class="buttons">
+                                          <span class="control">
+                                              <button id="save-image" class="button is-success">
+                                                  <span class="icon">
+                                                      <i class="fas fa-md fa-save"></i>
+                                                    </span><span>Save Image</span></button>
+                                              </span>
                                       <span class="control">
                                         <button id="clear-text" class="button is-danger">
-                                                Clear Texts</button>
+                                            <span class="icon">
+                                                <i class="fas fa-md fa-trash-alt"></i>
+                                              </span><span>Clear Texts</span</button>
                                         </span>
                                       </div>
                 </div>
@@ -155,6 +163,10 @@ integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 crossorigin="anonymous">
 </script>
 
+<script
+src="http://html2canvas.hertzen.com/dist/html2canvas.min.js">
+</script>
+
 <script type="text/javascript">
 $(function(){
     $('#gen-form').submit(function(e){
@@ -187,6 +199,16 @@ $(function(){
     $('#clear-text').click(function(e){ 
       $('#model-output').text('')
     });
+
+    // https://stackoverflow.com/a/51478809
+    $("#save-image").click(function() {
+
+      html2canvas(document.querySelector('#model-output')).then(function(canvas) {
+
+          saveAs(canvas.toDataURL(), 'gen_texts.png');
+      });
+      });
+
   });
 
 function getInputValues() {
@@ -196,6 +218,34 @@ function getInputValues() {
   });
   return inputs;
 }
+
+// https://stackoverflow.com/a/51478809
+function saveAs(uri, filename) {
+
+var link = document.createElement('a');
+
+if (typeof link.download === 'string') {
+
+    link.href = uri;
+    link.download = filename;
+
+    //Firefox requires the link to be in the body
+    document.body.appendChild(link);
+
+    //simulate click
+    link.click();
+
+    //remove the link when done
+    document.body.removeChild(link);
+
+} else {
+
+    window.open(uri);
+
+}
+}
+
+
 </script>
 
 </html>
