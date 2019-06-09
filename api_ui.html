@@ -77,7 +77,8 @@ section {
     <section id="main" class="section">
         <div class="container">
             <div class="columns is-variable is-8">
-                <div id="generation-form" class="column is-narrow" style="width: 250px;">
+                <div  class="column is-narrow" style="width: 250px;">
+                        <form id="gen-form">
                         <div class="field">
                                 <label class="label">Text Prompt</label>
                                 <div class="control">
@@ -88,7 +89,7 @@ section {
                         <div class="field">
                                 <label class="label">Generated Text Length</label>
                                 <div class="control">
-                                  <input id="length" class="input" type="text" placeholder="Text input" value="100">
+                                  <input id="gen-length" class="input" type="text" placeholder="Text input" value="100">
                                 </div>
                                 <p class="help">Length of the text in tokens to generate. <em>(max: 1024)</em></p>
                               </div>
@@ -102,7 +103,7 @@ section {
                                   </div>
                                   <div class="buttons">
                               <span class="control">
-                                    <button id="generate-text" class="button is-link" type="submit" >
+                                    <button type="submit" name="submit" id="generate-text" class="button is-link" >
                                             <span class="icon">
                                                     <i class="fas fa-md fa-robot"></i>
                                                   </span><span>Generate Text!</span></button>
@@ -112,6 +113,7 @@ section {
                                                 Clear Texts</button>
                                         </span>
                                       </div>
+                                      </form>
                 </div>
                 <div id="model-output" class="column">
                     <p id="tutorial" class="subtitle"><em>Generated text will appear here!
@@ -146,16 +148,15 @@ crossorigin="anonymous">
 
 <script type="text/javascript">
 $(function(){
-    $('#generate-text').submit(function(e){
+    $('#gen-form').submit(function(e){
       e.preventDefault();
       $.ajax({
         type: "POST",
-        url: "https://hacker-news-dstdu4u23a-uc.a.run.app",
+        url: "https://gpt2-hackernews-dstdu4u23a-uc.a.run.app",
         dataType: "json",
-        contentType: "application/json",
         data: JSON.stringify( {
             "prefix": $('#prefix').val(),
-            "length": $('#length').val(),
+            "length": $('#gen-length').val(),
             "temperature": $('#temperature').val(),
             } ),
         beforeSend: function(data) {
@@ -166,7 +167,7 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var html = '<div class=\"gen-box\">' + data['text'] + '</div>'
+            var html = '<div class=\"gen-box\">' + data.text + '</div>'
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         },
         error: function(jqXHR, textStatus, errorThrown) {
