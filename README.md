@@ -58,7 +58,7 @@ text = req.json()['text']
 print(text)
 ```
 
-The UI from `app_ui.html` utilizes AJAX `POST` requests via jQuery to retrieces the posts and parse the data for display.
+The UI from `app_ui.html` utilizes AJAX `POST` requests via jQuery to retrieve the generated text and parse the data for display.
 
 ## Helpful Notes
 
