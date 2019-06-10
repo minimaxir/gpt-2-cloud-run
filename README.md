@@ -4,6 +4,12 @@ App for building a text-generation API for generating text from [OpenAI](https:/
 
 The base `app.py` runs [starlette](https://www.starlette.io) for async/futureproofness, and is easily hackable if you want to modify GPT-2's input/output, force certain generation parameters, or want to add additional features/endpoints such as tweeting the generated result.
 
+## Demo
+
+You can play with a web-based demo of a Cloud Run API pointing at the default 117M "small" GPT-2 model here: https://minimaxir.com/apps/gpt2-small/
+
+The demo web UI is based off of the `app_ui.html` file in this repo (built on [Bulma](https://bulma.io) and [jQuery](https://jquery.com)) and is designed to be easily hackable to add new features and/or adjust the design (e.g. you can change the URL in the JavaScript function to point to your own Cloud Run API).
+
 ## How to Build the Container And Start Cloud Run
 
 Since Cloud Run is stateless without access to local storage, you must bundle the model within the container. First, download/clone this repo and copy the model into the folder (the model should be in the form of the folder hierarchy `/checkpoint/run1`, which is the case by default for most finetuning scripts)
@@ -29,7 +35,7 @@ docker tag gpt2 gcr.io/[PROJECT-ID]/gpt2
 docker push gcr.io/[PROJECT-ID]/gpt2
 ```
 
-Once done, deploy the uploaded image to Cloud Run via [the console](https://console.cloud.google.com/run). **Set Memory Allocated to 2 GB and Maximum Requests Per Container to 2**!
+Once done, deploy the uploaded image to Cloud Run via [the console](https://console.cloud.google.com/run). **Set Memory Allocated to 2 GB and Maximum Requests Per Container to 1**!
 
 The Cloud Run logs will tell you how the service runs, and the `INFO` log level contains Cloud Run diagnostic info, including the time it takes for a request to run.
 
@@ -52,20 +58,15 @@ text = req.json()['text']
 print(text)
 ```
 
-## Demo
-
-Here is a public Cloud Run endpoint which contains the model used to create [Hacker News titles](https://github.com/minimaxir/hacker-news-gpt-2): `https://hacker-news-dstdu4u23a-uc.a.run.app`
-
-You can interact with that URL with the methods mentioned above. (it uses the `hacker_news_app.py` from the `examples` folder, which modifies the existing `app.py` by fixing the `length` at 100 and altering the output. You can still provide a `prefix` and `temperature` as parameters however)
-
-I am seeking contributors to [help build a webpage front-end client](https://github.com/minimaxir/gpt-2-cloud-run/issues/2) for gpt-2-cloud-run endpoints.
+The UI from `app_ui.html` utilizes AJAX `POST` requests via jQuery to retrieve the generated text and parse the data for display.
 
 ## Helpful Notes
 
 * Due to Cloud Run's current 2 GB memory maximum, this app will only work with the 117M "small" GPT-2 model, and not the 345M "medium" model (even if Cloud Run offers a 4 GB option in the future, it would not be enough to support the 345M model).
-* Each prediction, at the default 1023 token `length`, will take about 2 minutes to generate. You may want to consider reducing the `length` of the generated text if speed is a concern and/or hardcapping the `length` at the app-level.
+* Each prediction, at the default 1023 token `length`, will take about 2 minutes to generate (10 seconds per 100 tokens). You may want to consider reducing the `length` of the generated text if speed is a concern and/or hardcapping the `length` at the app-level.
 * If your API on Cloud Run is actively processing a request less than 7% of the time (at the 100 millisecond level) in a given month, you'll stay [within the free tier](https://cloud.google.com/run/pricing) of Cloud Run, and the price is $0.10 an hour if the service goes over the free tier. Only the time starting up an instance and processing a request counts as billable time (i.e. the durations in the logs); idle time does not count as billable, making it surprisingly easy to stay within the limits.
-* The concurrency is set to `2` such that if there is only one user of the API (e.g. a cron that pings the API or a random internet user stumbling accross the API), it will not spawn more instances which would increase cost unnecessarily.
+* The concurrency is set to `1` to ensure maximum utilization for each user (if a single user is using it and accidently causes another container to spawn, it doesn't matter cost-wise as only requests processing incurs charges, not the number of active containers).
+* Memory leaks in the container may cause you to go over the 2GB limit and crash the container after enough text generations. Fortunately, Cloud Run can quickly recover (although the current request will fail), and having multiple containers operating due to low concurrency can distribute the workload.
 
 ## If You Want More Power
 
@@ -76,7 +77,6 @@ I am seeking contributors to [help build a webpage front-end client](https://git
 ## Future Improvements
 
 * Add/test a GPU image
-* Add logging to the app to take advantage of Cloud Run's logging capabilities.
 
 ## See Also
 
