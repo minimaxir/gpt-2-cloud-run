@@ -210,15 +210,21 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var gentext = data.text.replace(/\n\n/g, "<div><br></div>").replace(/\n/g, "<div></div>")
-            var html = '<div class=\"gen-box\">' + gentext + '</div><div class="gen-border"></div>'
+            var gentext = data.text;
+            if ($("#prefix").length & $("#prefix").val() != '') {
+              var pattern =  new RegExp('^' + $("#prefix").val(), 'g');
+              var gentext = gentext.replace(pattern, '<strong>' + $("#prefix").val() + '</strong>');
+            }
+
+            var gentext = gentext.replace(/\n\n/g, "<div><br></div>").replace(/\n/g, "<div></div>");
+            var html = '<div class=\"gen-box\">' + gentext + '</div><div class="gen-border"></div>';
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         },
         error: function(jqXHR, textStatus, errorThrown) {
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var html = '<div class="gen-box warning">There was an error generating the text! Please try again!</div>';
+            var html = '<div class="gen-box warning">There was an error generating the text! Please try again!</div><div class="gen-border"></div>';
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         }
       });
