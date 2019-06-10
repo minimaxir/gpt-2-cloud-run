@@ -3,6 +3,7 @@ from starlette.responses import UJSONResponse
 import gpt_2_simple as gpt2
 import uvicorn
 import os
+import gc
 
 app = Starlette(debug=False)
 
@@ -26,7 +27,7 @@ async def homepage(request):
                              headers=response_header)
 
     text = gpt2.generate(sess,
-                         length=int(params.get('length', 1023)),
+                         length=min(int(params.get('length', 1000)), 1000),
                          temperature=float(params.get('temperature', 0.7)),
                          top_k=int(params.get('top_k', 0)),
                          top_p=float(params.get('top_p', 0)),
@@ -37,6 +38,7 @@ async def homepage(request):
                          return_as_list=True
                          )[0]
 
+    gc.collect()
     return UJSONResponse({'text': text},
                          headers=response_header)
 
