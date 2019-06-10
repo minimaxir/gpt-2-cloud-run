@@ -127,6 +127,13 @@ section {
                                     </div>
                                     <p class="help">Controls the generated text "creativity." <em>(the higher the temperature, the more creative)</em></p>
                                   </div>
+                                  <div class="field">
+                                    <label class="label">Top <em>k</em></label>
+                                    <div class="control">
+                                      <input id="top_k" class="input" type="text" placeholder="40" value="40">
+                                    </div>
+                                    <p class="help">Constrains the generated text tokens to the top <em>k</em> possibilities. <em>(set to 0 to disable)</em></p>
+                                  </div>
                                   <div class="buttons">
                               <span class="control">
                                     <button type="submit" name="submit" id="generate-text" class="button is-link" >
@@ -203,7 +210,7 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var gentext = data.text.replace(/\n\n/g, "<div><br></div>")
+            var gentext = data.text.replace(/\n\n/g, "<div><br></div>").replace(/\n/g, "<div></div>")
             var html = '<div class=\"gen-box\">' + gentext + '</div><div class="gen-border"></div>'
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         },
@@ -211,7 +218,7 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var html = '<div class="gen-box warning">Error! The generated text did not return successfully!</div>';
+            var html = '<div class="gen-box warning">There was an error generating the text! Please try again!</div>';
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         }
       });
