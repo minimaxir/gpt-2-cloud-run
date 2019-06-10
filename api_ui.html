@@ -20,10 +20,14 @@ section {
     display: block;
     padding: 1.25rem;
     color: #4a4a4a;
-    border-bottom: 0.5px solid #d5d5d5;
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 1.25;
+}
+
+.gen-border {
+    height: 0.25em;
+    background-color: #d5d5d5;  
 }
 
 .gen-box.warning {
@@ -43,6 +47,7 @@ section {
   margin-top: 1em;
   border-top: 0.5px solid #d5d5d5;
 }
+
 </style>
 
 <html>
@@ -103,7 +108,7 @@ section {
                         <div class="field">
                                 <label class="label">Text Prompt</label>
                                 <div class="control">
-                                  <textarea id="prefix" class="textarea" type="text" placeholder="ROMEO:" rows="2"></textarea>
+                                  <textarea id="prefix" class="textarea" type="text" placeholder="Donald Trump" rows="2"></textarea>
                                 </div>
                                 <p class="help">Starts the generated text with the specified text. <em>(if empty, will use a random starting text)</em></p>
                               </div>
@@ -187,7 +192,7 @@ $(function(){
       e.preventDefault();
       $.ajax({
         type: "POST",
-        url: "https://gpt2-hackernews-dstdu4u23a-uc.a.run.app",
+        url: "https://gpt2-default-dstdu4u23a-uc.a.run.app",
         dataType: "json",
         data: JSON.stringify( getInputValues() ),
         beforeSend: function(data) {
@@ -198,7 +203,8 @@ $(function(){
             $('#generate-text').removeClass("is-loading");
             $('#generate-text').prop("disabled", false);
             $('#tutorial').remove();
-            var html = '<div class=\"gen-box\">' + data.text + '</div>'
+            var gentext = data.text.replace(/\n\n/g, "<div><br></div>")
+            var html = '<div class=\"gen-box\">' + gentext + '</div><div class="gen-border"></div>'
             $(html).appendTo('#model-output').hide().fadeIn("slow");
         },
         error: function(jqXHR, textStatus, errorThrown) {
