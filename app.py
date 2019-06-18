@@ -37,7 +37,7 @@ async def homepage(request):
                          temperature=float(params.get('temperature', 0.7)),
                          top_k=int(params.get('top_k', 0)),
                          top_p=float(params.get('top_p', 0)),
-                         prefix=params.get('prefix', None),
+                         prefix=params.get('prefix', '')[:500],
                          truncate=params.get('truncate', None),
                          include_prefix=str(params.get(
                              'include_prefix', True)).lower() == 'true',
