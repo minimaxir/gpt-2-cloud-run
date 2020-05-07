@@ -55,7 +55,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI-Generated Text with GPT-2 using Google Cloud Run</title>
+  <title>Weather Journals (Prototype)</title>
   <meta name="title" content="AI-Generated Text with GPT-2 using Google Cloud Run" />
   <meta name="description" content="Generate text from OpenAI's GPT-2 model!" />
 
@@ -72,7 +72,7 @@
         <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
       </span>
     </span>
-    <div class="brand-text is-family-code is-uppercase has-text-weight-bold">GPT-2</div>
+    <div class="brand-text is-family-code is-uppercase has-text-weight-bold">Weather Journals</div>
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu is-active">
@@ -80,7 +80,7 @@
 
 
       <div class="navbar-item">
-        Generate custom text from an AI using GPT-2 (using the 117M default model)
+        Stories from you, the weather, and the 117M model.
       </div>
 
     </div>
@@ -101,14 +101,28 @@
 
 <body>
   <section id="main" class="section">
+
     <div class="container">
       <div class="columns is-variable is-5">
         <div class="column is-narrow" style="width: 250px;">
+          <label class="label">
+            Latest Weather Data
+          </label>
+          <p id="temperature">
+          <p>
+          <p id="humidity">
+          </p>
+          <p id="pressure">
+          </p>
+          <p id="rain">
+          </p>
+          <p id="wind">
+          </p>
           <form id="gen-form">
             <div class="field">
               <label class="label">Text Prompt</label>
               <div class="control">
-                <textarea id="prefix" class="textarea" type="text" placeholder="Donald Trump" rows="2"></textarea>
+                <textarea id="prefix" class="textarea" type="text" placeholder="The weather is..." rows="2"></textarea>
               </div>
               <p class="help">Starts the generated text with the specified text. <em>(Optional: max 500 characters)</em></p>
             </div>
@@ -158,9 +172,7 @@
                 <span class="icon">
                   <i class="fas fa-md fa-trash-alt"></i>
                 </span><span>Clear Texts</span</button> </span> </div> </div> <div id="model-output" class="column">
-                  <p id="tutorial" class="subtitle"><em>Generated text will appear here!
-                      Use the form to configure GPT-2 and press <strong>Generate Text</strong>
-                      to get your own text!
+                  <p id="tutorial" class="subtitle"><em>Text comes out here.
                     </em></p>
           </div>
         </div>
@@ -173,9 +185,9 @@
     <div class="content has-text-centered">
       <p>
         Made using <a href="https://github.com/minimaxir/gpt-2-simple" target="_blank"><strong>gpt-2-simple</strong></a>
-        and <a href="https://github.com/minimaxir/gpt-2-cloud-run" target="_blank"><strong>gpt-2-cloud-run</strong></a>
-        by <a href="https://minimaxir.com" target="_blank">Max Woolf</a>. Original GPT-2 model provided by <a
-          href="https://openai.com" target="_blank">OpenAI</a>. This website content
+        and <a href="https://github.com/minimaxir/gpt-2-cloud-run" target="_blank"><strong>gpt-2-cloud-run</strong></a>. Original
+        UI by <a href="https://minimaxir.com" target="_blank">Max Woolf</a>. Modified by Schuyler deVos for prototyping purposes.
+         Original GPT-2 model provided by <a href="https://openai.com" target="_blank">OpenAI</a>. This website content
         is licensed <a href="http://opensource.org/licenses/mit-license.php" target="_blank">MIT</a>.
       </p>
     </div>
@@ -192,12 +204,64 @@
 </script>
 
 <script type="text/javascript">
+
+/*let Http = new XMLHttpRequest();
+let path = 'https://tigoe.io/itpower-data?macAddress=F8:F0:05:F5:F8:51&sessionKey=90764572';
+Http.open("GET", path);
+Http.send();
+
+Http.onreadystatechange=(e)=>{
+  console.log(Http.responseText)
+}*/
+
+// make arrays to save each weather data
+let wind_dir = [];
+let winddir_avg2m = [];
+let windspeedmph = [];
+let rainin = [];
+let dailyrainin = [];
+let temperature = [];
+let humidity = [];
+let pressure = [];
+let illuminance = [];
+let uva = [];
+let uvb = [];
+let uvindex = [];
+let recorded_at= [];
+
+$(document).ready(function() {
+  let path = 'https://tigoe.io/itpower-data?macAddress=F8:F0:05:F5:F8:51&sessionKey=90764572';
+  $.get(path, function(data, status) {
+    console.log(data[data.length-1]);
+      recorded_at.push(data[data.length-1].recorded_at);
+      wind_dir.push(data[data.length-1].wind_dir);
+      winddir_avg2m.push(data[data.length-1].winddir_avg2m);
+      windspeedmph.push(data[data.length-1].windspeedmph);
+      rainin.push(data[data.length-1].rainin);
+      dailyrainin.push(data[data.length-1].dailyrainin);
+      temperature.push(data[data.length-1].temperature);
+      humidity.push(data[data.length-1].humidity);
+      pressure.push(data[data.length-1].pressure);
+      illuminance.push(data[data.length-1].illuminance);
+      uva.push(data[data.length-1].uva);
+      uvb.push(data[data.length-1].uvb);
+      uvindex.push(data[data.length-1].uvindex);
+
+      document.getElementById("rain").innerHTML = "Rain: "+rainin[0]+" inches";
+      document.getElementById("wind").innerHTML = "Wind Speed: "+windspeedmph[0]+" mph";
+      document.getElementById("temperature").innerHTML = "Temperature: "+temperature[0]+" C";
+      document.getElementById("humidity").innerHTML = "Humidity: "+humidity[0]+" %";
+      document.getElementById("pressure").innerHTML = "Pressure: "+pressure[0];
+  })
+})
+
   $(function () {
     $('#gen-form').submit(function (e) {
       e.preventDefault();
       $.ajax({
         type: "POST",
-        url: "https://gpt2-default-dstdu4u23a-uc.a.run.app",
+        //url: "https://gpt2-default-dstdu4u23a-uc.a.run.app",
+        url: "https://gpt2-online-service-scm276nkra-ue.a.run.app",
         dataType: "json",
         data: JSON.stringify(getInputValues()),
         beforeSend: function (data) {

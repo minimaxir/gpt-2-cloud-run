@@ -33,12 +33,12 @@ async def homepage(request):
                              headers=response_header)
 
     text = gpt2.generate(sess,
-                         length=int(params.get('length', 1023)),
+                         length=int(params.get('length', 100)),
                          temperature=float(params.get('temperature', 0.7)),
                          top_k=int(params.get('top_k', 0)),
                          top_p=float(params.get('top_p', 0)),
-                         prefix=params.get('prefix', '')[:500],
-                         truncate=params.get('truncate', None),
+                         prefix=params.get('prefix', '<|startoftext|>')[:500],
+                         truncate=params.get('truncate', '<|endoftext|>'),
                          include_prefix=str(params.get(
                              'include_prefix', True)).lower() == 'true',
                          return_as_list=True
