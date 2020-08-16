@@ -59,7 +59,6 @@
   <title>Weather Journals (Prototype)</title>
   <meta name="title" content="AI-Generated Text with GPT-2 using Google Cloud Run" />
   <meta name="description" content="Generate text from OpenAI's GPT-2 model!" />
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -149,7 +148,14 @@
               <p class="help">Controls the generated text "creativity." <em>(the higher the temperature, the more
                   creative)</em></p>
             </div>
-            
+            <div class="field">
+              <label class="label">Top <em>k</em></label>
+              <div class="control">
+                <input id="top_k" class="input" type="text" placeholder="40" value="40">
+              </div>
+              <p class="help">Constrains the generated text tokens to the top <em>k</em> possibilities. <em>(set to 0 to
+                  disable)</em></p>
+            </div>
             <div class="buttons">
               <span class="control">
                 <button type="submit" name="submit" id="generate-text" class="button is-link">
@@ -166,8 +172,15 @@
                 <span class="icon">
                   <i class="fas fa-md fa-save"></i>
                 </span><span>Save Image</span></button>
-            </span> 
-          -->
+            </span>
+            <span class="control">
+              <button id="clear-text" class="button is-danger">
+                <span class="icon">
+                  <i class="fas fa-md fa-trash-alt"></i>
+                </span><span>Clear Texts</span</button> </span> </div> </div> <div id="model-output" class="column">
+                  <p id="tutorial" class="subtitle"><em>Text comes out here.
+                    </em></p>
+        -->
           </div>
         </div>
       </div>
