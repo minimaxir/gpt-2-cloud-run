@@ -26,6 +26,22 @@
 
 //after sun angle, stars and moon. then we'll see, gotta add the spaces for input at some point.
 
+//right, i think this is the last step
+//we need to... so, right now... right. ok. so, right now midnight is the 0 and 24 (other midnight) is the end.
+//... just change the initial position, right...?
+//or no, bc init pos doesnt matter. its initial angle. then wouldnt i have to change final angle?
+
+//changing final angle is the only way its gonna work, maybe just adding smthing to the value?
+
+// TO-DO: stop moon from slamming into wall
+// change colors on the mountains (don't want them all one-tone at night, can just stop the lerp before it completes by 
+// changing the if conditions)
+// pick a typeface
+  // what impression do i want people to have? comfort? something warm? something a little calm? i think so. 
+  // PUT THE BLINKING CURSOR AFTER IT? that's more... like, typewriter. typewriter can work?
+  // they're kinda calming but also like, storytelling. yeah, this is about storytelling. like in jason's website, that's hot right now.
+// im digging the airier fonts, maybe cause of weather. air is part of weather.
+
 let canvas;
 
 function dateConverter(array,newArray) {
@@ -124,99 +140,67 @@ function dateConverter(array,newArray) {
     document.getElementById("humidity").innerHTML = "Humidity: "+humidity[humidity.length-1]+" %";
     document.getElementById("pressure").innerHTML = "Pressure: "+pressure[pressure.length-1];
 
+    //i might not need mapper for all of these, can i just do what i did for final angle?
+    //sun: RISES AT 6 AND SETS AT 6
+
     mapper(windspeedmph,mappedwindspeed,0.1,5);
     mapper(rainin,mappedrainin,0,2000);
     recordedtime = dateConverter(recorded_at,recordedtime);
-    finalAngle = map(recordedtime[recordedtime.length-1],min(recordedtime),max(recordedtime),PI,2*PI);
+    //finalAngle = map(recordedtime[recordedtime.length-1],min(recordedtime),max(recordedtime),0,2*PI) - (3*PI)/2;
+    finalAngle = map(recordedtime[recordedtime.length-1],min(recordedtime),max(recordedtime),2*PI,4*PI) - (3*PI)/2;
     })
   }
 
   //------------------------------------//
   //--------------SUN-------------------//
   //------------------------------------//
-  /*
-  θ=arctan2(cx−x,cy−y)×180/π+90∘
-  It gives you angle from 0∘ to 270∘ .
-
-  If θ<0∘ then θ=360∘+θ.
-  let newAngle = atan(2*(width/2-0,height-height))
-  IM NOT LOOKING FOR THE ANGLE IM LOOKING FOR THE XY OF THE FINAL ANGLE
-
-  ok, here's the problem.
-  i want the minor radius (the sun's zenith) to always be, say, height/12. the major radius will always be width. (depending on how the window 
-    is resized tho)
-
-  this.newAngleMove = function() {
-    if (width/2) > (height - height/12) {
-      this.a = width/2;
-      this.b = height-height/12;
-    } else {
-      this.a = height-height/12;
-      this.b = width/2;
-    }
-
-    if (this.angle < finalAngle) {
-      this.angle += this.speed;
-      this.speed = finalAngle/(pow(this.angle,5.3));
-    } 
-
-    this.x = (a*b) / sqrt((b*b) + ((a*a)*pow(tan(angle),2)));
-    this.y = (a*b) / sqrt((a*a) + ((b*b)/pow(tan(angle),2)));
-
-    noStroke();
-    fill("#FFC914");
-    circle(this.x,this.y,this.r);
-  }
-
-  */
   let theSun;
   let finalAngle;
 
-  function Sun(y,r) {
-    this.initialX = 0;
-    this.initialY = height-100;
-    this.x = this.initialX;
-    this.y = this.initialY;
-    this.angle = PI;
+  function Sun() {
+    this.x = null;
+    this.y = null;
+    this.angle = 0;
     this.r = 100;
-    this.speed = 0.0001
+    this.speed = 0.01
     this.a = null;
     this.b = null;
-    
-    this.angleMove = function() {
-      if (this.angle < finalAngle) {
-        this.angle += this.speed;
-        this.speed = finalAngle/(pow(this.angle,5.3));
-      } 
-      let distX = dist(this.initialX,this.initialY,width/2,height);
-      let distY = sqrt(pow(this.initialX-width/2,2)+pow(this.initialY-height,2))
-      this.x = width/2 + cos(this.angle) * distX;
-      this.y = height + sin(this.angle) * distY;
-      noStroke();
-      fill("#FFC914");
-      circle(this.x,this.y,this.r);
-    }
 
     this.newAngleMove = function() {
-      if ((width/2) > (height - height/12)) {
-        this.a = width/2;
-        this.b = height-height/12;
-      } else {
-        this.a = height-height/12;
-        this.b = width/2;
-      }
+      this.a = width/2;
+      this.b = height-height/6;
   
       if (this.angle < finalAngle) {
         this.angle += this.speed;
-        this.speed = finalAngle/(pow(this.angle,5.3));
-      } 
-  
+        //this makes the speed horrendously high somehow
+        //because when its negative they get divided to some insane amount
+        this.speed = constrain(finalAngle/(pow(this.angle,5.3)),0.003,.01);
+        //the problem is that for small angles even pow of this.angle won't be very high
+        //so for those you'll need to... maybe pow of finalAngle-this.angle?
+        console.log(finalAngle/(pow(this.angle,5.3)));
+      }
+
       this.x = (this.a*this.b) / sqrt((this.b*this.b) + ((this.a*this.a)*pow(tan(this.angle),2)));
       this.y = (this.a*this.b) / sqrt((this.a*this.a) + ((this.b*this.b)/pow(tan(this.angle),2)));
-  
+
+      if(this.angle > PI/2 && this.angle < (3*PI)/2){
+        this.x *= -1;
+      }
+
+      if(this.angle > PI && this.angle < 2*PI){
+        this.y *= -1;
+      }
+
+      this.x += width/2;
+      this.y += height;
+
       noStroke();
       fill("#FFC914");
       circle(this.x,this.y,this.r);
+
+      /*console.log("SunXPos: "+this.x,"SunYPos: "+this.y, "SunSpeed: "+this.speed, "Sun Angle: "+this.angle,
+                  "MoonXPos: "+theMoon.newX,"MoonYPos: "+theMoon.newY,"Moon Angle: "+theMoon.angle,
+                  "The Final Angle: "+finalAngle, "Width of Screen: "+width/2,"Height of Screen: "+height);*/
     }
   }
 
@@ -225,57 +209,29 @@ function dateConverter(array,newArray) {
   //------------------------------------//
  let theMoon;
 
- function Moon(y,r) {
-   /*
-   so what do we need for the moon
-   just make the x and y and angle and stuff based on the sun, right?
-   */
-   this.initialX = width;
-   this.initialY = height + 100;
-   this.x = this.initialX;
-   this.y = this.initialY;
-   this.angle = theSun.angle + PI;
-   this.r = 100;
-   this.speed = 0.0001
-   this.a = null;
-   this.b = null;
-   
-   this.angleMove = function() {
-     if (this.angle < finalAngle) {
-       this.angle += this.speed;
-       this.speed = finalAngle/(pow(this.angle,5.3));
-     } 
-     let distX = dist(this.initialX,this.initialY,width/2,height);
-     let distY = sqrt(pow(this.initialX-width/2,2)+pow(this.initialY-height,2))
-     this.x = width/2 + cos(this.angle) * distX;
-     this.y = height + sin(this.angle) * distY;
-     noStroke();
-     fill("#FFC914");
-     circle(this.x,this.y,this.r);
-   }
+  function Moon() {
+    this.x = null;
+    this.y = null;
+    this.newX = -theSun.x + width;
+    this.newY = -theSun.y + height*2;
+    this.angle = theSun.angle + PI;
+    this.r = 100;
+    this.speed = 0.01
+    this.a = null;
+    this.b = null;
 
-   this.newAngleMove = function() {
-     if ((width/2) > (height - height/12)) {
-       this.a = width/2;
-       this.b = height-height/12;
-     } else {
-       this.a = height-height/12;
-       this.b = width/2;
-     }
- 
-     if (this.angle < finalAngle) {
-       this.angle += this.speed;
-       this.speed = finalAngle/(pow(this.angle,5.3));
-     } 
- 
-     this.x = (this.a*this.b) / sqrt((this.b*this.b) + ((this.a*this.a)*pow(tan(this.angle),2)));
-     this.y = (this.a*this.b) / sqrt((this.a*this.a) + ((this.b*this.b)/pow(tan(this.angle),2)));
- 
-     noStroke();
-     fill("#FFC914");
-     circle(this.x,this.y,this.r);
-   }
- }
+    this.newAngleMove = function(color) {
+
+      this.newX = -theSun.x + width;
+      this.newY = -theSun.y + height*2;
+
+      noStroke();
+      fill("white");
+      circle(this.newX,this.newY,this.r);
+      fill(color);
+      circle(this.newX+20,this.newY,this.r-5);
+    }
+  }
   
   //------------------------------------//
   //-------------RAIN-------------------//
@@ -305,7 +261,30 @@ function dateConverter(array,newArray) {
   }
   }
   }
-  
+
+  //------------------------------------//
+  //--------------STARS-----------------//
+  //------------------------------------//
+  let stars = [];
+
+  function Star() {
+    this.x = random(10,width-10)
+    this.y = random(10,height-10)
+    this.r = random(1,7);
+
+    this.show = function(color) {
+      if (this.x < width/2 && this.y > height/1.5) {
+        this.x = random(10,width-10)
+        this.y = random(10,)
+      }
+      fill(color);
+      ellipse(this.x,this.y,this.r);
+    }
+  }
+
+  //------------------------------------//
+  //---------------CLOUDS---------------//
+  //------------------------------------//
   let clouds = [];
   
   function cloud(size,position) {
@@ -339,7 +318,12 @@ function dateConverter(array,newArray) {
     canvas = createCanvas(windowWidth,windowHeight);
     canvas.position(0,0);
     canvas.style('z-index','-1');
-    theSun = new Sun(height/5,width/10);
+    theSun = new Sun();
+    theMoon = new Moon();
+
+    for (let i=0; i<50; i++) {
+      stars.push(new Star);
+    }
   }
   
   let bgColor; 
@@ -359,18 +343,27 @@ function dateConverter(array,newArray) {
     let TColor2;
     let FTColor1;
     let FTColor2;
+    let starColor;
 
-    if (theSun.angle/PI < 1.5) {
+    let angleMeasure;
+
+    if (theSun.angle > PI && theSun.angle < (3*PI)/2) {
+      angleMeasure = (theSun.angle-PI)/(PI/2);
+
       bgColor = lerpColor(toBG,fromBG,(theSun.angle-PI)/(PI/2));
-      BTColor1 = lerpColor(color("#353544"),color("#3E5899"),(theSun.angle-PI)/(PI/2));
-      BTColor2 = lerpColor(color("#3E5899"),color("#353544"),(theSun.angle-PI)/(PI/2));
+      BTColor1 = lerpColor(color("#353544"),color("#3E5899"),angleMeasure);
+      BTColor2 = lerpColor(color("#3E5899"),color("#353544"),angleMeasure);
 
-      TColor1 = lerpColor(color("#3D665C"),color("#3C4C39"),(theSun.angle-PI)/(PI/2));
-      TColor2 = lerpColor(color("#3C4C39"),color("#3D665C"),(theSun.angle-PI)/(PI/2));
+      TColor1 = lerpColor(color("#3D665C"),color("#3C4C39"),angleMeasure);
+      TColor2 = lerpColor(color("#3C4C39"),color("#3D665C"),angleMeasure);
 
-      FTColor1 = lerpColor(color("#578B8D"),color("#95C2A6"),(theSun.angle-PI)/(PI/2));
-      FTColor2 = lerpColor(color("#95C2A6"),color("#578B8D"),(theSun.angle-PI)/(PI/2));
-    } else {
+      FTColor1 = lerpColor(color("#578B8D"),color("#95C2A6"),angleMeasure);
+      FTColor2 = lerpColor(color("#95C2A6"),color("#578B8D"),angleMeasure);
+
+      //so the stars are out at 4pm here, which isnt a great look
+      //i could... remap the sun position to a smaller range and then do white to bgcolor
+      starColor = lerpColor(color("white"),bgColor,angleMeasure);
+    } else if (theSun.angle > (3*PI)/2 && theSun.angle < 2*PI) {
       bgColor = lerpColor(fromBG,toBG,cos(theSun.angle));
       BTColor1 = lerpColor(color("#3E5899"),color("#353544"),cos(theSun.angle));
       BTColor2 = color("#353544")
@@ -380,6 +373,18 @@ function dateConverter(array,newArray) {
 
       FTColor1 = lerpColor(color("#95C2A6"),color("#578B8D"),cos(theSun.angle));
       FTColor2 = color("#578B8D");
+
+      starColor = lerpColor(bgColor,color("white"),cos(theSun.angle));
+    } else {
+      bgColor = toBG;
+
+      BTColor1 = color("#353544");
+      BTColor2 = color("#353544");
+      TColor1 = color("#3C4C39");
+      TColor2 = color("#3C4C39");
+      FTColor1 = color("#578B8D");
+      FTColor2 = color("#578B8D");
+      starColor = color("white");
     }
     background(bgColor);
     
@@ -389,18 +394,23 @@ function dateConverter(array,newArray) {
     let ty2 = height/4;
     let tx3 = width/2+tx2;
     let ty3 = height;
-    
-    noStroke();
+
+    //theMoon.show(bgColor);
+
+    //-------------STARS-----------------------//
+    for (let i=0; i<stars.length; i++) {
+      stars[i].show(starColor);
+    }
     
     //-------------SUN MOVES HERE--------------//
-    theSun.angleMove();
+    theSun.newAngleMove();
+    theMoon.newAngleMove(bgColor);
+    
     
     //background triangle 1
     let bt1x2 = width/5;
     let bt1x1 = bt1x2 - width/6;
     let bt1x3 = bt1x2 + width/8;
-    //let lightColor1 = "#353544";
-    //let darkColor1 = "#3E5899";
     //side 1
     fill(BTColor1);
     triangle(bt1x1, ty1, bt1x2, height/3, bt1x3, ty3);
@@ -476,8 +486,8 @@ function dateConverter(array,newArray) {
     //clouds 
     //higher speed = higher chance of clouds spawning
     if (clouds.length < 10) {
-      if (random(0,7000*(mappedwindspeed[mappedwindspeed.length-1])) < 1) {
-        clouds.push(new Cloud(random(50,70),[random(-100, -50),random(60,height/2)],mappedwindspeed[mappedwindspeed.length-1]));
+      if (random(0,1000*(1/mappedwindspeed[mappedwindspeed.length-1])) < 1) {
+        clouds.push(new Cloud(random(50,width/13),[random(-100, -50),random(60,height/2)],mappedwindspeed[mappedwindspeed.length-1]));
       }
     }
     for (let i=0; i<clouds.length; i++) {
