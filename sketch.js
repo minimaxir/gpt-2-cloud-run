@@ -58,7 +58,7 @@ function dateConverter(array,newArray) {
     return newArray;
 }
   
-  function mapper(array,mappedArray,lower,upper,constraint = 0) {
+  /*function mapper(array,mappedArray,lower,upper,constraint = 0) {
     console.log("hewf0");
     let maxValue = max(array);
     let minValue = min(array);
@@ -72,7 +72,7 @@ function dateConverter(array,newArray) {
       }
     }
     console.log("hewf");
-  }
+  }*/
   
   let url = 'https://tigoe.io/itpower-data';
   let macID = 'F8:F0:05:F5:F8:51';
@@ -140,11 +140,21 @@ function dateConverter(array,newArray) {
     document.getElementById("humidity").innerHTML = "Humidity: "+humidity[humidity.length-1]+" %";
     document.getElementById("pressure").innerHTML = "Pressure: "+pressure[pressure.length-1];
 
+<<<<<<< Updated upstream
     //i might not need mapper for all of these, can i just do what i did for final angle?
     //sun: RISES AT 6 AND SETS AT 6
 
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
     mapper(windspeedmph,mappedwindspeed,0.1,5);
     mapper(rainin,mappedrainin,0,2000);
+=======
+    //i might not need mapper for all of these, can i just do what i did for final angle?
+    //sun: RISES AT 6 AND SETS AT 6
+    finalWind = map(windspeedmph[windspeedmph.length-1],min(windspeedmph),max(windspeedmph),0.1,5);
+    finalRain = map(rainin[rainin.length-1],min(rainin),max(rainin),0,2000);
+>>>>>>> Stashed changes
     recordedtime = dateConverter(recorded_at,recordedtime);
     //finalAngle = map(recordedtime[recordedtime.length-1],min(recordedtime),max(recordedtime),0,2*PI) - (3*PI)/2;
     finalAngle = map(recordedtime[recordedtime.length-1],min(recordedtime),max(recordedtime),2*PI,4*PI) - (3*PI)/2;
@@ -172,6 +182,7 @@ function dateConverter(array,newArray) {
   
       if (this.angle < finalAngle) {
         this.angle += this.speed;
+<<<<<<< Updated upstream
         //this makes the speed horrendously high somehow
         //because when its negative they get divided to some insane amount
         this.speed = constrain(finalAngle/(pow(this.angle,5.3)),0.003,.01);
@@ -180,6 +191,22 @@ function dateConverter(array,newArray) {
         console.log(finalAngle/(pow(this.angle,5.3)));
       }
 
+=======
+<<<<<<< Updated upstream
+        this.speed = finalAngle/(pow(this.angle,5.3));
+      } 
+  
+=======
+        //this makes the speed horrendously high somehow
+        //because when its negative they get divided to some insane amount
+        this.speed = constrain(finalAngle/(pow(finalAngle+this.angle,5)),0.003,.01);
+        //the problem is that for small angles even pow of this.angle won't be very high
+        //so for those you'll need to... maybe pow of finalAngle-this.angle?
+        //consoleconsole.log(finalAngle/(pow(this.angle,5.3)));
+      }
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       this.x = (this.a*this.b) / sqrt((this.b*this.b) + ((this.a*this.a)*pow(tan(this.angle),2)));
       this.y = (this.a*this.b) / sqrt((this.a*this.a) + ((this.b*this.b)/pow(tan(this.angle),2)));
 
@@ -237,6 +264,7 @@ function dateConverter(array,newArray) {
   //-------------RAIN-------------------//
   //------------------------------------//
   let drops = []
+  let finalRain;
   
   function Drop() {
     this.x = random(0, width+200);
@@ -261,6 +289,12 @@ function dateConverter(array,newArray) {
   }
   }
   }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+  
+=======
+>>>>>>> Stashed changes
 
   //------------------------------------//
   //--------------STARS-----------------//
@@ -270,22 +304,40 @@ function dateConverter(array,newArray) {
   function Star() {
     this.x = random(10,width-10)
     this.y = random(10,height-10)
+<<<<<<< Updated upstream
     this.r = random(1,7);
+=======
+    this.r = random(0.1,3);
+    this.time = random(PI);
+>>>>>>> Stashed changes
 
     this.show = function(color) {
       if (this.x < width/2 && this.y > height/1.5) {
         this.x = random(10,width-10)
         this.y = random(10,)
       }
+<<<<<<< Updated upstream
       fill(color);
       ellipse(this.x,this.y,this.r);
+=======
+      this.time += random(.05,.15);
+      this.r = this.r + sin(this.time) / 15;
+      fill(color);
+      ellipse(this.x,this.y,this.r);
+      
+>>>>>>> Stashed changes
     }
   }
 
   //------------------------------------//
   //---------------CLOUDS---------------//
   //------------------------------------//
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   let clouds = [];
+  let finalWind;
   
   function cloud(size,position) {
     fill(256, 150);
@@ -318,12 +370,25 @@ function dateConverter(array,newArray) {
     canvas = createCanvas(windowWidth,windowHeight);
     canvas.position(0,0);
     canvas.style('z-index','-1');
+<<<<<<< Updated upstream
     theSun = new Sun();
     theMoon = new Moon();
 
     for (let i=0; i<50; i++) {
       stars.push(new Star);
     }
+=======
+<<<<<<< Updated upstream
+    theSun = new Sun(height/5,width/10);
+=======
+    theSun = new Sun();
+    theMoon = new Moon();
+
+    for (let i=0; i<100; i++) {
+      stars.push(new Star);
+    }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   }
   
   let bgColor; 
@@ -365,14 +430,28 @@ function dateConverter(array,newArray) {
       starColor = lerpColor(color("white"),bgColor,angleMeasure);
     } else if (theSun.angle > (3*PI)/2 && theSun.angle < 2*PI) {
       bgColor = lerpColor(fromBG,toBG,cos(theSun.angle));
-      BTColor1 = lerpColor(color("#3E5899"),color("#353544"),cos(theSun.angle));
+      BTColor1 = lerpColor(color("#3E5899"),color("#353544"),constrain(cos(theSun.angle),0,.90));
       BTColor2 = color("#353544")
 
       TColor1 = color("#3C4C39");
-      TColor2 = lerpColor(color("#3D665C"),color("#3C4C39"),cos(theSun.angle));
+      TColor2 = lerpColor(color("#3D665C"),color("#3C4C39"),constrain(cos(theSun.angle),0,.90));
 
-      FTColor1 = lerpColor(color("#95C2A6"),color("#578B8D"),cos(theSun.angle));
+      FTColor1 = lerpColor(color("#95C2A6"),color("#578B8D"),constrain(cos(theSun.angle),0,.90));
       FTColor2 = color("#578B8D");
+<<<<<<< Updated upstream
+=======
+
+      starColor = lerpColor(bgColor,color("white"),cos(theSun.angle));
+    } else {
+      bgColor = toBG;
+
+      BTColor1 = lerpColor(color("#3E5899"),color("#353544"),.90);
+      BTColor2 = color("#353544");
+      TColor1 = color("#3C4C39");
+      TColor2 = lerpColor(color("#3D665C"),color("#3C4C39"),.90);
+      FTColor1 = lerpColor(color("#95C2A6"),color("#578B8D"),.90);
+      FTColor2 = color("#578B8D");
+<<<<<<< Updated upstream
 
       starColor = lerpColor(bgColor,color("white"),cos(theSun.angle));
     } else {
@@ -385,6 +464,10 @@ function dateConverter(array,newArray) {
       FTColor1 = color("#578B8D");
       FTColor2 = color("#578B8D");
       starColor = color("white");
+=======
+      starColor = color("white");
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
     background(bgColor);
     
@@ -394,6 +477,7 @@ function dateConverter(array,newArray) {
     let ty2 = height/4;
     let tx3 = width/2+tx2;
     let ty3 = height;
+<<<<<<< Updated upstream
 
     //theMoon.show(bgColor);
 
@@ -406,6 +490,27 @@ function dateConverter(array,newArray) {
     theSun.newAngleMove();
     theMoon.newAngleMove(bgColor);
     
+=======
+<<<<<<< Updated upstream
+    
+    noStroke();
+    
+    //-------------SUN MOVES HERE--------------//
+    theSun.newAngleMove();
+=======
+
+    theMoon.newAngleMove(bgColor);
+
+    //-------------STARS-----------------------//
+    for (let i=0; i<stars.length; i++) {
+      stars[i].show(starColor);
+    }
+    
+    //-------------SUN MOVES HERE--------------//
+    theSun.newAngleMove();
+    
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     
     //background triangle 1
     let bt1x2 = width/5;
@@ -438,9 +543,9 @@ function dateConverter(array,newArray) {
     triangle(tx1, ty1, tx2, ty2, tx3-((tx3-tx1)/1.5), ty3);
     
     //rain 
-    if (mappedrainin[mappedrainin.length-1] > 0) {
+    if (finalRain > 0) {
       if (!(drops.length > 0)) {
-        for(let i = 0; i < mappedrainin[mappedrainin.length-1]*10; i++) {
+        for(let i = 0; i < finalRain*5; i++) {
           drops[i] = new Drop();
         }
       }
@@ -486,8 +591,18 @@ function dateConverter(array,newArray) {
     //clouds 
     //higher speed = higher chance of clouds spawning
     if (clouds.length < 10) {
+<<<<<<< Updated upstream
       if (random(0,1000*(1/mappedwindspeed[mappedwindspeed.length-1])) < 1) {
         clouds.push(new Cloud(random(50,width/13),[random(-100, -50),random(60,height/2)],mappedwindspeed[mappedwindspeed.length-1]));
+=======
+<<<<<<< Updated upstream
+      if (random(0,7000*(mappedwindspeed[mappedwindspeed.length-1])) < 1) {
+        clouds.push(new Cloud(random(50,70),[random(-100, -50),random(60,height/2)],mappedwindspeed[mappedwindspeed.length-1]));
+=======
+      if (random(0,1000*(1/finalWind)) < 1) {
+        clouds.push(new Cloud(random(50,width/13),[random(-100, -50),random(60,height/2)],finalWind));
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       }
     }
     for (let i=0; i<clouds.length; i++) {
@@ -501,6 +616,8 @@ function dateConverter(array,newArray) {
   
   function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    mapper(windspeedmph,mappedwindspeed,0.1,5);
-    mapper(rainin,mappedrainin,0,2000);
+    //mapper(windspeedmph,mappedwindspeed,0.1,5);
+    //mapper(rainin,mappedrainin,0,2000);
+    finalWind = map(windspeedmph[windspeedmph.length-1],min(windspeedmph),max(windspeedmph),0.1,5);
+    finalRain = map(rainin[rainin.length-1],min(rainin),max(rainin),0,2000);
   }
